@@ -1,0 +1,22 @@
+version: '2.4'
+
+services:
+  otel-flask-three-bs:
+    stdin_open: true
+    tty: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app_bootstrap.py:/app.py
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+    - |
+      opentelemetry-bootstrap --action=install
+      opentelemetry-instrument flask run
+    environment:
+      FLASK_RUN_HOST: 0.0.0.0
+      FLASK_RUN_PORT: 5000
+      

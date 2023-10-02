@@ -1,0 +1,22 @@
+version: '2.4'
+
+services:
+  otel-flask-three-ic:
+    stdin_open: true
+    tty: true
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5001:5001"
+    volumes:
+      - ./app_incode.py:/app.py
+    entrypoint: ["/bin/bash", "-c"]
+    command:
+    - |
+      pip install opentelemetry-instrumentation-flask
+      opentelemetry-instrument flask run
+    environment:
+      FLASK_RUN_HOST: 0.0.0.0
+      FLASK_RUN_PORT: 5001
+      
